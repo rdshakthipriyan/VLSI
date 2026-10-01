@@ -147,23 +147,30 @@ A bitstream was successfully generated for the implemented design.
 
 ## Vivado Block Design
 
-The processor-to-ALU path is:
+The custom ALU was packaged as an AXI4-Lite peripheral and integrated with the Zynq-7000 Processing System using AXI SmartConnect.
+
+![Vivado Block Design](Vivado/block-design.png)
+
+### Block Design Architecture
 
 ```text
-Zynq Processing System
-        |
-        | M_AXI_GP0
-        v
-   AXI SmartConnect
-        |
-        v
-    axi_alu_0
-        |
-        v
-      ALU
+Zynq-7000 Processing System
+          |
+          | M_AXI_GP0
+          v
+    AXI SmartConnect
+          |
+          | AXI4-Lite
+          v
+     Custom axi_alu IP
+          |
+          v
+       4-bit ALU
 ```
 
-The custom `axi_alu` IP was packaged and integrated into the Vivado block design as an AXI4-Lite slave.
+The Zynq Processing System acts as the AXI master, while the custom `axi_alu` IP operates as an AXI4-Lite slave. The processor communicates with the ALU through memory-mapped registers for operands, operation selection, result, and status flags.
+
+The Processor System Reset block provides synchronized reset signals for the AXI interconnect and custom peripheral, while the Zynq processing system provides the clock used by the AXI interface.
 
 ## Repository Structure
 
